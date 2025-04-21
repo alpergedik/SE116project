@@ -6,9 +6,7 @@ public class Main {
         // IntelliJ IDEA suggests fixing it.
         System.out.println("Hello and welcome!");
         System.out.println("Hello and welcomeeeeee!");
-        System.out.println("Hello and welcomeeeeee!");
-        System.out.println("Hello and welcomeeeeee!");
-        System.out.println("Hello and welcomeeeeee!");
+
         //alper
 
         for (int i = 1; i <= 5; i++) {
