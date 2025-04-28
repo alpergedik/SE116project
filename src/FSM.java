@@ -39,6 +39,29 @@ public class FSM {
         System.out.println();
     }
 
+    public boolean setInitialState(String name) {
+        String key = name.toUpperCase();
+        State s = states.get(key);
+        if (s == null) {
+            s = new State(key);
+            states.put(key, s);
+            initialState = s;
+            return false; // warning için
+        }
+        initialState = s;
+        return true;
+    }
 
+    public boolean addFinalState(String name) {
+        String key = name.toUpperCase();
+        State s = states.get(key);
+        if (s == null) {
+            s = new State(key);
+            states.put(key, s);
+            finalStates.add(s);
+            return false; // warning için
+        }
+        return finalStates.add(s);
+    }
 }
 

@@ -27,6 +27,14 @@ public class CommandParser {
                 handleStates(Arrays.copyOfRange(tokens, 1, tokens.length));
                 break;
 
+            case "INITIAL-STATE":
+                handleInitialState(Arrays.copyOfRange(tokens, 1, tokens.length));
+                break;
+
+            case "FINAL-STATES":
+                handleFinalStates(Arrays.copyOfRange(tokens, 1, tokens.length));
+                break;
+
             default:
                 System.out.println("Warning: Unknown command");
         }
@@ -82,4 +90,38 @@ public class CommandParser {
             }
         }
     }
+    private void handleInitialState(String[] args) {
+        if (args.length == 0) {
+            System.out.println("Warning: No initial state provided");
+            return;
+        }
+        String stateName = args[0];
+        if (!stateName.matches("[A-Za-z0-9]+")) {
+            System.out.println("Warning: Invalid state '" + stateName + "'");
+            return;
+        }
+        boolean result = fsm.setInitialState(stateName);
+        if (!result) {
+            System.out.println("Warning: State '" + stateName + "' was not previously declared. Declaring it now.");
+        }
+    }
+
+    private void handleFinalStates(String[] args) {
+        if (args.length == 0) {
+            System.out.println("Warning: No final states provided");
+            return;
+        }
+
+        for (String stateName : args) {
+            if (!stateName.matches("[A-Za-z0-9]+")) {
+                System.out.println("Warning: Invalid state '" + stateName + "'");
+                continue;
+            }
+            boolean result = fsm.addFinalState(stateName);
+            if (!result) {
+                System.out.println("Warning: Final state '" + stateName + "' was already declared as final");
+            }
+        }
+    }
+
 }
