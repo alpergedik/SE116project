@@ -1,17 +1,27 @@
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.println("Hello and welcome!");
-        System.out.println("Hello and welcomeeeeee!");
+        System.out.println("FSM DESIGNER 1.0 " + java.time.LocalDateTime.now());
+        Scanner scanner = new Scanner(System.in);
+        FSM fsm = new FSM();
+        CommandParser parser = new CommandParser(fsm);
 
-        //alper
+        while (true) {
+            System.out.print("? ");
+            StringBuilder input = new StringBuilder();
+            String line;
+            do {
+                line = scanner.nextLine();
+                input.append(line).append("\n");
+            } while (!line.contains(";"));
 
-        for (int i = 1; i <= 5; i++) {
-
-            System.out.println("i = " + i);
+            if (parser.parseAndExecute(input.toString().trim())) {
+                break;
+            }
         }
+
+        System.out.println("TERMINATED BY USER");
     }
 }
