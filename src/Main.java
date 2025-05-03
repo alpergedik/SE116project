@@ -6,7 +6,8 @@ public class Main {
         System.out.println("FSM DESIGNER 1.0 " + java.time.LocalDateTime.now());
         Scanner scanner = new Scanner(System.in);
         FSM fsm = new FSM();
-        CommandParser parser = new CommandParser(fsm);
+        Logger logger = new Logger();
+        CommandParser parser = new CommandParser(fsm, logger);
 
         while (true) {
             System.out.print("? ");

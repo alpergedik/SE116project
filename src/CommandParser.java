@@ -1,15 +1,23 @@
+import java.io.*;
 import java.util.*;
 
 public class CommandParser {
     private FSM fsm;
+    private Logger logger;
 
     public CommandParser(FSM fsm) {
         this.fsm = fsm;
     }
 
+    public CommandParser(FSM fsm, Logger logger) {
+        this.fsm = fsm;
+        this.logger = logger;
+    }
+
     public boolean parseAndExecute(String rawInput) {
         String cleanInput = removeComments(rawInput).trim();
 
+        if (logger.isLogging()) logger.log("> " + rawInput.replaceAll("\n", " "));
         if (cleanInput.isEmpty()) return false;
 
         String[] tokens = cleanInput.split("\\s+");
@@ -44,7 +52,38 @@ public class CommandParser {
             case "EXECUTE":
                 handleExecute(Arrays.copyOfRange(tokens, 1, tokens.length));
                 break;
-
+            case "CLEAR":
+                fsm.clearAll();
+                System.out.println("FSM CLEARED.");
+                break;
+            case "LOG":
+                if (tokens.length == 1) {
+                    if (logger.isLogging()) {
+                        logger.stopLogging();
+                        System.out.println("STOPPED LOGGING");
+                    } else {
+                        System.out.println("LOGGING was not enabled");
+                    }
+                } else {
+                    String filename = tokens[1];
+                    logger.startLogging(filename);
+                    System.out.println("STARTED LOGGING to " + filename);
+                }
+                break;
+            case "COMPILE":
+                if (tokens.length < 2) {
+                    System.out.println("Error: COMPILE requires a filename.");
+                    break;
+                }
+                handleCompile(tokens[1]);
+                break;
+            case "LOAD":
+                if (tokens.length < 2) {
+                    System.out.println("Error: LOAD requires a filename.");
+                    break;
+                }
+                handleLoad(tokens[1]);
+                break;
             default:
                 System.out.println("Warning: Unknown command");
         }
@@ -178,5 +217,38 @@ public class CommandParser {
 
         List<String> stateTrace = fsm.execute(input);
         System.out.println(String.join(" ", stateTrace));
+    }
+    private void handleCompile(String filename) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
+            out.writeObject(fsm);
+            System.out.println("Compile successful");
+            if (logger.isLogging()) logger.log("Compiled to file: " + filename);
+        } catch (IOException e) {
+            System.out.println("Error: Could not write to file " + filename);
+            e.printStackTrace();
+        }
+    }
+    private void handleLoad(String filename) {
+        if (filename.endsWith(".fsm")) {
+            // Load FSM from binary file
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
+                FSM loadedFSM = (FSM) in.readObject();
+                this.fsm.copyFrom(loadedFSM);
+                System.out.println("FSM loaded successfully from " + filename);
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println("Error: Failed to load FSM from binary file.");
+            }
+        } else {
+            // Text file: simulate running commands
+            try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    parseAndExecute(line.trim());
+                }
+                System.out.println("Commands loaded and executed from text file.");
+            } catch (IOException e) {
+                System.out.println("Error: Could not read file " + filename);
+            }
+        }
     }
 }

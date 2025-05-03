@@ -1,11 +1,21 @@
+import java.io.Serializable;
 import java.util.*;
 
-public class FSM {
+public class FSM implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Set<String> symbols = new HashSet<>();
     private Map<String, State> states = new HashMap<>();
     private State initialState;
     private Set<State> finalStates = new HashSet<>();
     private Map<String, Map<String, State>> transitions = new HashMap<>();
+
+    public void copyFrom(FSM other) {
+        this.symbols = new HashSet<>(other.symbols);
+        this.states = new HashMap<>(other.states);
+        this.transitions = new HashMap<>(other.transitions);
+        this.finalStates = new HashSet<>(other.finalStates);
+        this.initialState = other.initialState;
+    }
 
     public boolean addSymbol(String s) {
         return symbols.add(s.toUpperCase());
@@ -171,6 +181,14 @@ public class FSM {
         }
 
         return trace;
+
+    }
+    public void clearAll() {
+        symbols.clear();
+        states.clear();
+        transitions.clear();
+        finalStates.clear();
+        initialState = null;
     }
 }
 
