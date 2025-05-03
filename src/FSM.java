@@ -135,6 +135,42 @@ public class FSM {
         System.out.println(String.join(", ", transitionStrings));
     }
 
+    public List<String> execute(String input) {
+        List<String> trace = new ArrayList<>();
+        if (initialState == null) {
+            trace.add("NO");
+            return trace;
+        }
 
+        State currentState = initialState;
+        trace.add(currentState.toString());
+
+        for (char c : input.toCharArray()) {
+            String symbol = String.valueOf(c).toUpperCase();
+
+            if (!symbols.contains(symbol)) {
+                trace.add("Error: Invalid symbol '" + symbol + "'");
+                trace.add("NO");
+                return trace;
+            }
+
+            Map<String, State> currentTransitions = transitions.get(currentState.getName());
+            if (currentTransitions == null || !currentTransitions.containsKey(symbol)) {
+                trace.add("NO");
+                return trace;
+            }
+
+            currentState = currentTransitions.get(symbol);
+            trace.add(currentState.toString());
+        }
+
+        if (finalStates.contains(currentState)) {
+            trace.add("YES");
+        } else {
+            trace.add("NO");
+        }
+
+        return trace;
+    }
 }
 

@@ -41,7 +41,9 @@ public class CommandParser {
             case "PRINT":
                 fsm.printFSM();
                 break;
-
+            case "EXECUTE":
+                handleExecute(Arrays.copyOfRange(tokens, 1, tokens.length));
+                break;
 
             default:
                 System.out.println("Warning: Unknown command");
@@ -161,5 +163,20 @@ public class CommandParser {
 
             fsm.addTransition(symbol, from, to);
         }
+    }
+    private void handleExecute(String[] args) {
+        if (args.length != 1) {
+            System.out.println("Error: EXECUTE requires a single alphanumeric input string.");
+            return;
+        }
+
+        String input = args[0].toUpperCase();
+        if (!input.matches("[A-Z0-9]+")) {
+            System.out.println("Error: Invalid characters in input string.");
+            return;
+        }
+
+        List<String> stateTrace = fsm.execute(input);
+        System.out.println(String.join(" ", stateTrace));
     }
 }
