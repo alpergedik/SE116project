@@ -63,5 +63,30 @@ public class FSM {
         }
         return finalStates.add(s);
     }
+    public boolean isSymbolDefined(String s) {
+        return symbols.contains(s.toUpperCase());
+    }
+
+    public boolean isStateDefined(String s) {
+        return states.containsKey(s.toUpperCase());
+    }
+    public void addTransition(String symbol, String from, String to) {
+        symbol = symbol.toUpperCase();
+        from = from.toUpperCase();
+        to = to.toUpperCase();
+
+        State fromState = states.get(from);
+        State toState = states.get(to);
+
+        transitions.putIfAbsent(from, new HashMap<>());
+
+        Map<String, State> symbolMap = transitions.get(from);
+
+        if (symbolMap.containsKey(symbol)) {
+            System.out.println("Warning: Overriding previous transition for <" + symbol + ", " + from + ">");
+        }
+
+        symbolMap.put(symbol, toState);
+    }
 }
 

@@ -35,6 +35,10 @@ public class CommandParser {
                 handleFinalStates(Arrays.copyOfRange(tokens, 1, tokens.length));
                 break;
 
+            case "TRANSITIONS":
+                handleTransitions(cleanInput.substring("TRANSITIONS".length()).trim());
+                break;
+
             default:
                 System.out.println("Warning: Unknown command");
         }
@@ -123,5 +127,35 @@ public class CommandParser {
             }
         }
     }
+    private void handleTransitions(String input) {
+        String[] transitionParts = input.split(",");
 
+        for (String part : transitionParts) {
+            String[] tokens = part.trim().split("\s+");
+
+            if (tokens.length != 3) {
+                System.out.println("Error: Each transition must have exactly 3 parts (symbol, fromState, toState)");
+                continue;
+            }
+
+            String symbol = tokens[0].toUpperCase();
+            String from = tokens[1].toUpperCase();
+            String to = tokens[2].toUpperCase();
+
+            if (!fsm.isSymbolDefined(symbol)) {
+                System.out.println("Error: Invalid symbol '" + symbol + "'");
+                continue;
+            }
+            if (!fsm.isStateDefined(from)) {
+                System.out.println("Error: Invalid state '" + from + "'");
+                continue;
+            }
+            if (!fsm.isStateDefined(to)) {
+                System.out.println("Error: Invalid state '" + to + "'");
+                continue;
+            }
+
+            fsm.addTransition(symbol, from, to);
+        }
+    }
 }
