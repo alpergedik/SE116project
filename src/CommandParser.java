@@ -38,6 +38,10 @@ public class CommandParser {
             case "TRANSITIONS":
                 handleTransitions(cleanInput.substring("TRANSITIONS".length()).trim());
                 break;
+            case "PRINT":
+                fsm.printFSM();
+                break;
+
 
             default:
                 System.out.println("Warning: Unknown command");

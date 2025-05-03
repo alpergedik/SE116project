@@ -88,5 +88,53 @@ public class FSM {
 
         symbolMap.put(symbol, toState);
     }
+    public void printTransitions() {
+        System.out.println("TRANSITIONS:");
+        for (String from : transitions.keySet()) {
+            for (String symbol : transitions.get(from).keySet()) {
+                System.out.println(symbol + " " + from + " " + transitions.get(from).get(symbol));
+            }
+        }
+    }
+    public void printFSM() {
+        // SYMBOLS
+        System.out.println("SYMBOLS {" + String.join(", ", symbols) + "}");
+
+        // STATES
+        System.out.print("STATES {");
+        List<String> stateLines = new ArrayList<>();
+        for (State s : states.values()) {
+            StringBuilder sb = new StringBuilder(s.toString());
+            if (s.equals(initialState)) sb.append(" (Initial)");
+            if (finalStates.contains(s)) sb.append(" (Final)");
+            stateLines.add(sb.toString());
+        }
+        System.out.println(String.join(", ", stateLines) + "}");
+
+        // INITIAL STATE
+        if (initialState != null)
+            System.out.println("INITIAL STATE " + initialState);
+
+        // FINAL STATES
+        System.out.print("FINAL STATES {");
+        List<String> finalStateNames = new ArrayList<>();
+        for (State f : finalStates) {
+            finalStateNames.add(f.toString());
+        }
+        System.out.println(String.join(", ", finalStateNames) + "}");
+
+        // TRANSITIONS
+        System.out.print("TRANSITIONS ");
+        List<String> transitionStrings = new ArrayList<>();
+        for (String from : transitions.keySet()) {
+            for (String symbol : transitions.get(from).keySet()) {
+                State to = transitions.get(from).get(symbol);
+                transitionStrings.add(symbol + " " + from + " " + to);
+            }
+        }
+        System.out.println(String.join(", ", transitionStrings));
+    }
+
+
 }
 
