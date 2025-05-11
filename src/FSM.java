@@ -107,10 +107,8 @@ public class FSM implements Serializable {
         }
     }
     public void printFSM() {
-        // SYMBOLS
         System.out.println("SYMBOLS {" + String.join(", ", symbols) + "}");
 
-        // STATES
         System.out.print("STATES {");
         List<String> stateLines = new ArrayList<>();
         for (State s : states.values()) {
@@ -121,11 +119,9 @@ public class FSM implements Serializable {
         }
         System.out.println(String.join(", ", stateLines) + "}");
 
-        // INITIAL STATE
         if (initialState != null)
             System.out.println("INITIAL STATE " + initialState);
 
-        // FINAL STATES
         System.out.print("FINAL STATES {");
         List<String> finalStateNames = new ArrayList<>();
         for (State f : finalStates) {
@@ -133,7 +129,6 @@ public class FSM implements Serializable {
         }
         System.out.println(String.join(", ", finalStateNames) + "}");
 
-        // TRANSITIONS
         System.out.print("TRANSITIONS ");
         List<String> transitionStrings = new ArrayList<>();
         for (String from : transitions.keySet()) {

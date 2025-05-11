@@ -22,7 +22,6 @@ public class Main {
                 break;
             }
         }
-
         System.out.println("TERMINATED BY USER");
     }
 }
